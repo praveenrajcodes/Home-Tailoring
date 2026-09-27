@@ -1,8 +1,4 @@
-databases:
-  - name: stitchcraft-db
-    plan: free
-    databaseName: stitchcraft
-    user: stitchcraft
+
 
 services:
   - type: web
