@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StitchCraft | Home Tailoring Management</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div id="authScreen" class="auth-screen">
+  <div class="auth-card">
+    <div class="auth-brand">🧵 <span>StitchCraft</span></div>
+    <p class="auth-sub">Home Tailoring Management System</p>
+    <div class="role-tabs"><button id="adminTab" class="role-tab active" onclick="setLoginRole('admin')">👑 Admin</button><button id="customerTab" class="role-tab" onclick="setLoginRole('customer')">👤 Customer</button></div>
+    <form onsubmit="login(event)">
+      <label>Email / Phone<input id="loginId" required placeholder="admin@stitchcraft.local"></label>
+      <label>Password<input id="loginPassword" type="password" required placeholder="••••••••"></label>
+      <div class="auth-row">
+        <label class="remember-label"><input type="checkbox" id="rememberMe"> Remember me</label>
+        <a href="javascript:void(0)" onclick="openForgotModal()">Forgot password?</a>
+      </div>
+      <button class="primary auth-submit">Login</button>
+    </form>
+    <div class="demo-login" id="demoLogin">Demo Admin: admin@stitchcraft.local / admin123</div>
+    <p class="auth-register" id="authRegisterLink">New customer? <a href="javascript:void(0)" onclick="openRegisterModal()">Create Account</a></p>
+  </div>
+</div>
+<div class="app" id="appRoot">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><div class="brand-mark">🧵</div><div><strong>StitchCraft</strong><span>Home Tailoring</span></div></div>
+    <button class="mobile-close" onclick="toggleSidebar()">×</button>
+    <nav class="admin-nav">
+      <button class="nav-item active" data-role="admin" data-page="dashboard">📊 <span>Dashboard</span></button>
+      <button class="nav-item" data-role="admin" data-page="orders">🧵 <span>Orders</span><b id="navPending">0</b></button>
+      <button class="nav-item" data-role="admin" data-page="tracking">📲 <span>Customer Tracking</span></button>
+      <button class="nav-item" data-role="admin" data-page="customers">👥 <span>Customers</span></button>
+      <button class="nav-item" data-role="admin" data-page="measurements">📏 <span>Measurements</span></button>
+      <button class="nav-item" data-role="admin" data-page="calendar">📅 <span>Calendar</span></button>
+      <button class="nav-item" data-role="admin" data-page="payments">💳 <span>Payments</span></button>
+      <button class="nav-item" data-role="admin" data-page="invoices">🧾 <span>Invoices</span></button>
+      <button class="nav-item" data-role="admin" data-page="gallery">🖼️ <span>Design Gallery</span></button>
+      <button class="nav-item" data-role="admin" data-page="materials">📦 <span>Materials</span></button>
+      <button class="nav-item" data-role="admin" data-page="reports">📈 <span>Reports</span></button>
+      <button class="nav-item" data-role="admin" data-page="ai">🤖 <span>AI Assistant</span></button>
+    </nav>
+    <nav class="cust-nav">
+      <button class="nav-item" data-role="customer" data-page="cdashboard">🏠 <span>My Dashboard</span></button>
+      <button class="nav-item" data-role="customer" data-page="myorders">🧵 <span>My Orders</span></button>
+      <button class="nav-item" data-role="customer" data-page="tracking">📲 <span>Track Order</span></button>
+      <button class="nav-item" data-role="customer" data-page="mymeasurements">📏 <span>My Measurements</span></button>
+      <button class="nav-item" data-role="customer" data-page="mydesigns">🖼️ <span>My Designs</span></button>
+      <button class="nav-item" data-role="customer" data-page="cpayments">💳 <span>Payments</span></button>
+      <button class="nav-item" data-role="customer" data-page="cinvoices">🧾 <span>My Invoices</span></button>
+      <button class="nav-item" data-role="customer" data-page="notifications">🔔 <span>Notifications</span></button>
+      <button class="nav-item" data-role="customer" data-page="feedback">⭐ <span>Feedback</span></button>
+      <button class="nav-item" data-role="customer" data-page="myprofile">👤 <span>My Profile</span></button>
+    </nav>
+    <div class="sidebar-bottom"><button class="nav-item" data-role="admin" data-page="notifications">🔔 <span>Notifications</span><b id="navAlerts">0</b></button><button class="nav-item" data-role="admin" data-page="settings">⚙️ <span>Settings</span></button><div class="shop-mini">✂️ <div><strong>StitchCraft Studio</strong><small>Open today · 9 AM–8 PM</small></div></div></div>
+  </aside>
+  <main class="main">
+    <header class="topbar"><button class="hamburger" onclick="toggleSidebar()">☰</button><div class="crumb" id="pageTitle">Dashboard</div><div class="top-actions"><div class="search"><span>⌕</span><input id="globalSearch" placeholder="Search orders, customers..."></div><button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">☀️</button><button class="icon-btn notification" onclick="showNotifications()">🔔<i id="notifDot"></i></button><button class="icon-btn" onclick="logout()" title="Logout">↪</button><div class="avatar" id="userAvatar">PR</div></div></header>
+    <div class="content">
+      <section class="page active" id="page-dashboard">
+        <div class="welcome"><div><span class="eyebrow">TAILORING OVERVIEW</span><h1>Good evening, Praveen 👋</h1><p>Here’s what is happening in your tailoring studio today.</p></div><button class="primary" onclick="openOrderModal()">＋ New Order</button></div>
+        <div class="stats-grid">
+          <div class="stat-card purple"><div class="stat-icon">🧵</div><div><span>Total Orders</span><strong id="statOrders">0</strong><small>All time orders</small></div></div>
+          <div class="stat-card orange"><div class="stat-icon">⏳</div><div><span>Pending</span><strong id="statPending">0</strong><small>Need attention</small></div></div>
+          <div class="stat-card green"><div class="stat-icon">✓</div><div><span>Completed</span><strong id="statCompleted">0</strong><small>Ready / delivered</small></div></div>
+          <div class="stat-card pink"><div class="stat-icon">₹</div><div><span>Revenue</span><strong id="statRevenue">₹0</strong><small>This month</small></div></div>
+        </div>
+        <div class="dashboard-grid"><div class="panel chart-panel"><div class="panel-head"><div><h3>Revenue Overview</h3><p>Monthly income trend</p></div><select id="revenuePeriod"><option>Monthly</option><option>Weekly</option></select></div><canvas id="revenueChart"></canvas></div><div class="panel"><div class="panel-head"><div><h3>Order Status</h3><p>Current workload</p></div></div><div class="donut-wrap"><canvas id="statusChart"></canvas><div class="donut-center"><strong id="donutTotal">0</strong><span>Orders</span></div></div><div class="legend" id="statusLegend"></div></div></div>
+        <div class="dashboard-grid lower"><div class="panel"><div class="panel-head"><div><h3>Recent Orders</h3><p>Latest customer requests</p></div><button class="link-btn" onclick="navigate('orders')">View all →</button></div><div class="table-wrap"><table><thead><tr><th>Order</th><th>Customer</th><th>Garment</th><th>Delivery</th><th>Status</th><th>Amount</th></tr></thead><tbody id="recentOrders"></tbody></table></div></div><div class="panel"><div class="panel-head"><div><h3>Upcoming Deliveries</h3><p>Next 7 days</p></div></div><div id="upcomingList" class="upcoming-list"></div></div></div>
+        <div class="quick-grid"><button onclick="openOrderModal()">➕<span>New Order</span></button><button onclick="navigate('customers')">👤<span>Add Customer</span></button><button onclick="navigate('measurements')">📏<span>Measurements</span></button><button onclick="navigate('payments')">💳<span>Payments</span></button><button onclick="navigate('invoices')">🧾<span>Invoice</span></button><button onclick="navigate('ai')">🤖<span>AI Assistant</span></button></div>
+      </section>
+
+      <section class="page" id="page-orders"><div class="page-heading"><div><span class="eyebrow">WORKFLOW</span><h2>Orders</h2><p>Track every order from measurement to delivery.</p></div><button class="primary" onclick="openOrderModal()">＋ New Order</button></div><div class="toolbar"><input id="orderSearch" placeholder="Search customer, phone or garment..." oninput="renderOrdersPage()"><select id="orderFilter" onchange="renderOrdersPage()"><option>All</option><option>Pending</option><option>In Progress</option><option>Trial</option><option>Ready</option><option>Delivered</option></select><select id="orderSort" onchange="renderOrdersPage()"><option value="date">Latest</option><option value="delivery">Delivery date</option><option value="amount">Amount</option></select></div><div id="ordersPageGrid" class="order-grid"></div></section>
+
+      <section class="page" id="page-customers"><div class="page-heading"><div><span class="eyebrow">CRM</span><h2>Customers</h2><p>Profiles, contact details and order history.</p></div><button class="primary" onclick="openCustomerModal()">＋ Add Customer</button></div><div class="stats-mini"><div><span>Total Customers</span><strong id="customerCount">0</strong></div><div><span>Repeat Customers</span><strong id="repeatCount">0</strong></div><div><span>New This Month</span><strong id="newCustomerCount">0</strong></div></div><div class="customer-grid" id="customerGrid"></div></section>
+
+      <section class="page" id="page-measurements"><div class="page-heading"><div><span class="eyebrow">PRECISION FIT</span><h2>Digital Measurements</h2><p>Save and reuse customer measurements.</p></div><button class="primary" onclick="openMeasurementModal()">＋ Add Measurement</button></div><div class="measurement-grid" id="measurementGrid"></div></section>
+
+      <section class="page" id="page-calendar"><div class="page-heading"><div><span class="eyebrow">SCHEDULE</span><h2>Delivery Calendar</h2><p>Plan fittings, trials and deliveries.</p></div><button class="secondary" onclick="openOrderModal()">＋ Schedule Order</button></div><div class="calendar-panel"><div class="calendar-head"><button onclick="changeMonth(-1)">‹</button><h3 id="calendarTitle"></h3><button onclick="changeMonth(1)">›</button></div><div class="weekdays"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div><div class="calendar" id="calendarGrid"></div></div><div class="panel"><div class="panel-head"><h3>Selected / Upcoming Deliveries</h3></div><div id="calendarOrders" class="calendar-orders"></div></div></section>
+
+      <section class="page" id="page-payments"><div class="page-heading"><div><span class="eyebrow">FINANCE</span><h2>Payments</h2><p>Track advances, balances and collection status.</p></div><button class="primary" onclick="openPaymentModal()">＋ Record Payment</button></div><div class="stats-grid finance"><div class="stat-card green"><div class="stat-icon">₹</div><div><span>Collected</span><strong id="paidTotal">₹0</strong><small>All recorded payments</small></div></div><div class="stat-card orange"><div class="stat-icon">!</div><div><span>Outstanding</span><strong id="balanceTotal">₹0</strong><small>Pending customer balance</small></div></div><div class="stat-card purple"><div class="stat-icon">%</div><div><span>Collection Rate</span><strong id="collectionRate">0%</strong><small>Paid vs billed</small></div></div></div><div class="panel table-panel"><div class="table-wrap"><table><thead><tr><th>Invoice</th><th>Customer</th><th>Total</th><th>Paid</th><th>Balance</th><th>Status</th><th>Action</th></tr></thead><tbody id="paymentTable"></tbody></table></div></div></section>
+
+      <section class="page" id="page-invoices"><div class="page-heading"><div><span class="eyebrow">BILLING</span><h2>Invoices</h2><p>Generate printable professional invoices.</p></div><button class="primary" onclick="openOrderModal()">＋ Create Invoice</button></div><div class="invoice-grid" id="invoiceGrid"></div></section>
+
+      <section class="page" id="page-gallery"><div class="page-heading"><div><span class="eyebrow">INSPIRATION</span><h2>Design Gallery</h2><p>Reference styles for customer consultations.</p></div><button class="primary" onclick="addDesign()">＋ Add Design</button></div><div class="gallery-grid" id="galleryGrid"></div></section>
+
+      <section class="page" id="page-materials"><div class="page-heading"><div><span class="eyebrow">INVENTORY</span><h2>Materials</h2><p>Track cloth, lining, thread and tailoring supplies.</p></div><button class="primary" onclick="openMaterialModal()">＋ Add Material</button></div><div class="material-grid" id="materialGrid"></div></section>
+
+      <section class="page" id="page-reports"><div class="page-heading"><div><span class="eyebrow">BUSINESS INTELLIGENCE</span><h2>Reports & Analytics</h2><p>Understand revenue, customers and popular services.</p></div><button class="secondary" onclick="window.print()">🖨 Print Report</button></div><div class="report-grid"><div class="panel"><h3>Popular Garments</h3><div id="popularGarments"></div></div><div class="panel"><h3>Customer Growth</h3><canvas id="customerChart"></canvas></div><div class="panel"><h3>Profit Snapshot</h3><div id="profitSnapshot"></div></div></div></section>
+
+      <section class="page" id="page-ai"><div class="page-heading"><div><span class="eyebrow">SMART STUDIO</span><h2>AI Tailoring Assistant</h2><p>Get design, pricing and workflow suggestions.</p></div></div><div class="ai-layout"><div class="panel ai-chat"><div class="ai-title"><div class="ai-orb">✦</div><div><h3>StitchAI</h3><p>Tailoring design assistant</p></div></div><div id="chatMessages" class="chat-messages"><div class="bubble ai">Hi! Tell me the occasion, garment and style you want. I can suggest a design, estimate a price and create a stitching plan.</div></div><div class="ai-input"><input id="aiInput" placeholder="e.g. Wedding blouse, traditional style..." onkeydown="if(event.key==='Enter')askAI()"><button class="primary" onclick="askAI()">Send</button></div></div><div class="panel"><h3>Quick Prompts</h3><div class="prompt-list"><button onclick="usePrompt('Suggest a wedding blouse design with a traditional look')">💍 Wedding blouse</button><button onclick="usePrompt('Suggest a simple office kurti design')">👗 Office kurti</button><button onclick="usePrompt('Give a price estimate for a shirt')">👔 Shirt pricing</button><button onclick="usePrompt('Create a stitching workflow for a bridal blouse')">🧵 Stitching workflow</button></div></div></div></section>
+
+      <section class="page" id="page-notifications"><div class="page-heading"><div><span class="eyebrow">AUTOMATION</span><h2>Notifications</h2><p>Delivery, payment and order alerts generated from your studio data.</p></div><button class="primary" onclick="generateNotifications(true)">↻ Refresh Alerts</button></div><div class="notification-stats"><div class="stat-card orange"><div class="stat-icon">🔔</div><div><span>Active Alerts</span><strong id="alertCount">0</strong><small>Needs attention</small></div></div><div class="stat-card purple"><div class="stat-icon">📅</div><div><span>Due Soon</span><strong id="dueSoonCount">0</strong><small>Today / tomorrow</small></div></div><div class="stat-card pink"><div class="stat-icon">₹</div><div><span>Payment Alerts</span><strong id="paymentAlertCount">0</strong><small>Outstanding</small></div></div></div><div class="panel"><div id="notificationList" class="notification-list"></div></div></section>
+
+<section class="page" id="page-tracking"><div class="page-heading"><div><span class="eyebrow">CUSTOMER PORTAL</span><h2>Order Tracking</h2><p>Customers can track an order using order ID and phone number.</p></div><button class="secondary" onclick="customerLogout()">Customer Logout</button></div><div class="tracking-hero"><div class="panel tracking-form"><h3>Track your tailoring order</h3><p>Enter the order ID and registered phone number.</p><div class="tracking-inputs"><input id="trackOrderId" placeholder="Order ID e.g. 1001"><input id="trackPhone" placeholder="Phone e.g. 9876511111"><button class="primary" onclick="trackOrder()">Track Order</button></div><div class="tracking-demo">Demo: Order <b>1001</b> · Phone <b>9876511111</b></div></div><div id="trackingResult" class="panel tracking-result"><div class="empty-track">📦<h3>Track an order</h3><p>Your order progress will appear here.</p></div></div></div></section>
+
+<section class="page" id="page-settings"><div class="page-heading"><div><span class="eyebrow">STUDIO CONTROL</span><h2>Settings</h2><p>Customize your tailoring application.</p></div></div><div class="settings-grid"><div class="panel"><h3>Shop Profile</h3><label>Shop Name<input id="shopName" value="StitchCraft Studio"></label><label>Phone<input id="shopPhone" value="+91 98765 43210"></label><label>Address<textarea id="shopAddress">Chennai, Tamil Nadu</textarea></label><button class="primary" onclick="saveSettings()">Save Settings</button></div><div class="panel"><h3>Preferences</h3><div class="setting-row"><span>Dark mode</span><label class="switch"><input type="checkbox" id="darkToggle" onchange="toggleTheme()"><i></i></label></div><div class="setting-row"><span>Delivery reminders</span><label class="switch"><input type="checkbox" checked><i></i></label></div><div class="setting-row"><span>WhatsApp alerts</span><label class="switch"><input type="checkbox" checked><i></i></label></div><hr><button class="danger" onclick="resetDemo()">Reset Demo Data</button></div><div class="panel" id="staffPanel"><h3>👩‍💼 Staff & Admin Accounts</h3><p style="color:var(--muted);font-size:12px;margin:-6px 0 12px">Only existing admins can create new admin or staff logins — customers can never self-register as Admin.</p><div id="staffList" class="staff-list"></div><button class="secondary" style="margin-top:10px" onclick="openStaffModal()">＋ Add Staff / Admin</button></div></div></section>
+
+<section class="page" id="page-cdashboard">
+  <div class="welcome"><div><span class="eyebrow">MY TAILORING</span><h1 id="custWelcome">Welcome back 👋</h1><p>Here's what's happening with your orders today.</p></div><button class="primary" onclick="navigate('myorders')">🧵 View My Orders</button></div>
+  <div class="stats-grid">
+    <div class="stat-card purple"><div class="stat-icon">🧵</div><div><span>Total Orders</span><strong id="custStatOrders">0</strong><small>All time</small></div></div>
+    <div class="stat-card orange"><div class="stat-icon">⏳</div><div><span>Active</span><strong id="custStatActive">0</strong><small>In progress</small></div></div>
+    <div class="stat-card green"><div class="stat-icon">📅</div><div><span>Next Delivery</span><strong id="custStatDelivery">—</strong><small>Expected date</small></div></div>
+    <div class="stat-card pink"><div class="stat-icon">₹</div><div><span>Balance Due</span><strong id="custStatBalance">₹0</strong><small>Outstanding</small></div></div>
+  </div>
+  <div class="panel" id="custCurrentOrderPanel"></div>
+  <div class="panel"><div class="panel-head"><div><h3>Recent Orders</h3><p>Your last few orders</p></div><button class="link-btn" onclick="navigate('myorders')">View all →</button></div><div class="table-wrap"><table><thead><tr><th>Order</th><th>Garment</th><th>Delivery</th><th>Status</th><th>Amount</th></tr></thead><tbody id="custRecentOrders"></tbody></table></div></div>
+</section>
+
+<section class="page" id="page-myorders"><div class="page-heading"><div><span class="eyebrow">MY WORKFLOW</span><h2>My Orders</h2><p>Track every order from measurement to delivery.</p></div></div><div id="myOrdersGrid" class="order-grid"></div></section>
+
+<section class="page" id="page-mymeasurements"><div class="page-heading"><div><span class="eyebrow">PRECISION FIT</span><h2>My Measurements</h2><p>Your saved measurement history.</p></div><button class="secondary" onclick="requestMeasurementUpdate()">✉️ Request Update</button></div><div class="measurement-grid" id="myMeasurementGrid"></div></section>
+
+<section class="page" id="page-mydesigns"><div class="page-heading"><div><span class="eyebrow">INSPIRATION</span><h2>My Designs</h2><p>Design references attached to your orders, plus studio inspiration gallery.</p></div></div><div class="panel"><h3>Your Order Designs</h3><div class="gallery-grid" id="myOrderDesigns"></div></div><div class="panel" style="margin-top:20px"><h3>Studio Inspiration Gallery</h3><div class="gallery-grid" id="myInspoGallery"></div></div></section>
+
+<section class="page" id="page-cpayments"><div class="page-heading"><div><span class="eyebrow">FINANCE</span><h2>Payments</h2><p>Your billing and balance summary.</p></div></div><div class="stats-grid finance"><div class="stat-card green"><div class="stat-icon">₹</div><div><span>Total Paid</span><strong id="custPaidTotal">₹0</strong><small>All recorded payments</small></div></div><div class="stat-card orange"><div class="stat-icon">!</div><div><span>Outstanding</span><strong id="custBalanceTotal">₹0</strong><small>Balance due</small></div></div></div><div class="panel table-panel"><div class="table-wrap"><table><thead><tr><th>Invoice</th><th>Garment</th><th>Total</th><th>Paid</th><th>Balance</th><th>Status</th><th>Action</th></tr></thead><tbody id="custPaymentTable"></tbody></table></div></div></section>
+
+<section class="page" id="page-cinvoices"><div class="page-heading"><div><span class="eyebrow">BILLING</span><h2>My Invoices</h2><p>View and print your invoices.</p></div></div><div class="invoice-grid" id="custInvoiceGrid"></div></section>
+
+<section class="page" id="page-feedback"><div class="page-heading"><div><span class="eyebrow">YOUR VOICE</span><h2>Feedback</h2><p>Tell us how we're doing.</p></div></div><div class="panel"><h3>Share Feedback</h3><div class="star-rate" id="starRate"><span data-val="1" onclick="setRating(1)">☆</span><span data-val="2" onclick="setRating(2)">☆</span><span data-val="3" onclick="setRating(3)">☆</span><span data-val="4" onclick="setRating(4)">☆</span><span data-val="5" onclick="setRating(5)">☆</span></div><textarea id="feedbackText" placeholder="Tell us about your experience..." rows="4" style="width:100%;margin-top:10px;padding:10px;border-radius:10px;border:1px solid var(--line);font-family:inherit"></textarea><button class="primary" style="margin-top:10px" onclick="submitFeedback()">Submit Feedback</button></div><div class="panel" style="margin-top:20px"><h3>Your Past Feedback</h3><div id="myFeedbackList"></div></div></section>
+
+<section class="page" id="page-myprofile"><div class="page-heading"><div><span class="eyebrow">ACCOUNT</span><h2>My Profile</h2><p>Manage your personal details and password.</p></div></div><div class="settings-grid"><div class="panel"><h3>Personal Details</h3><label>Full Name<input id="profName"></label><label>Mobile Number<input id="profPhone"></label><label>Email<input id="profEmail" type="email"></label><button class="primary" onclick="saveProfile()">Save Changes</button></div><div class="panel"><h3>Change Password</h3><label>Current Password<input id="profCurPw" type="password"></label><label>New Password<input id="profNewPw" type="password"></label><label>Confirm New Password<input id="profNewPw2" type="password"></label><button class="primary" onclick="changePassword()">Update Password</button></div></div></section>
+    </div>
+  </main>
+</div>
+<div id="modalRoot"></div><div id="toast" class="toast"></div>
+<script src="script.js"></script>
+</body></html>
