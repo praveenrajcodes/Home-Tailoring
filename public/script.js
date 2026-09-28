@@ -816,3 +816,24 @@ function logoutV5(){
   location.reload();
 }
 logout=logoutV5;
+
+
+/* ---- Live updates: refresh automatically when anyone changes data in Neon ---- */
+let liveSocket=null, liveTimer=null;
+function startLiveUpdates(){
+  if(liveSocket || typeof io==='undefined') return;
+  liveSocket=io({auth:{token:getToken()}});
+  liveSocket.on('data-changed',()=>{
+    clearTimeout(liveTimer);
+    liveTimer=setTimeout(async()=>{
+      try{
+        const state=await apiFetch('/api/state');
+        data.customers=state.customers||[]; data.orders=state.orders||[]; data.measurements=state.measurements||[];
+        data.materials=state.materials||[]; data.designs=state.designs||[]; data.settings=state.settings||{};
+        updateAll();
+      }catch(e){ /* ignore; next change or reload will retry */ }
+    },300);
+  });
+}
+const _enterAppBeforeLive=enterApp;
+enterApp=async function(){ await _enterAppBeforeLive.apply(this,arguments); startLiveUpdates(); };
